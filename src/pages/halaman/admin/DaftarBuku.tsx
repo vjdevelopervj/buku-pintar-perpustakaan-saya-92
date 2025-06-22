@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import NavbarUtama from "@/components/layout/NavbarUtama";
 import SidebarAdmin from "@/components/layout/SidebarAdmin";
@@ -105,11 +106,13 @@ const DaftarBukuAdmin = () => {
   };
 
   const handleAddBuku = () => {
+    const status: "tersedia" | "habis" = formData.jumlah_total > 0 ? "tersedia" : "habis";
+    
     const newBuku: Buku = {
       id: Date.now(),
       ...formData,
       jumlah_tersedia: formData.jumlah_total,
-      status: formData.jumlah_total > 0 ? "tersedia" : "habis"
+      status
     };
 
     setBukuList([...bukuList, newBuku]);
@@ -133,9 +136,11 @@ const DaftarBukuAdmin = () => {
 
   const handleEditBuku = () => {
     if (selectedBuku) {
+      const status: "tersedia" | "habis" = formData.jumlah_total > 0 ? "tersedia" : "habis";
+      
       const updatedList = bukuList.map(buku =>
         buku.id === selectedBuku.id
-          ? { ...buku, ...formData, status: formData.jumlah_total > 0 ? "tersedia" : "habis" }
+          ? { ...buku, ...formData, status }
           : buku
       );
       setBukuList(updatedList);
