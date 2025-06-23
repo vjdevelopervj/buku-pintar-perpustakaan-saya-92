@@ -1,4 +1,3 @@
-
 import NavbarUtama from "@/components/layout/NavbarUtama";
 import SidebarPengunjung from "@/components/layout/SidebarPengunjung";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PolarAngleAxis, PolarGrid, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 import { 
   BookOpen, 
   Book, 
@@ -32,11 +31,11 @@ const BerandaPengunjung = () => {
   ];
 
   const bukuTerpopuler = [
-    { rank: 1, judul: "Laskar Pelangi", peminjam: 156 },
-    { rank: 2, judul: "Ayat-Ayat Cinta", peminjam: 142 },
-    { rank: 3, judul: "Negeri 5 Menara", peminjam: 128 },
-    { rank: 4, judul: "Sang Pemimpi", peminjam: 115 },
-    { rank: 5, judul: "Perahu Kertas", peminjam: 98 },
+    { rank: 1, judul: "Laskar Pelangi", peminjam: 156, fill: "#3b82f6" },
+    { rank: 2, judul: "Ayat-Ayat Cinta", peminjam: 142, fill: "#10b981" },
+    { rank: 3, judul: "Negeri 5 Menara", peminjam: 128, fill: "#f59e0b" },
+    { rank: 4, judul: "Sang Pemimpi", peminjam: 115, fill: "#ef4444" },
+    { rank: 5, judul: "Perahu Kertas", peminjam: 98, fill: "#8b5cf6" },
   ];
 
   // Data untuk chart - Pembaca Teraktif (Top 5)
@@ -54,9 +53,10 @@ const BerandaPengunjung = () => {
     buku: p.buku
   }));
 
-  const bukuChartData = bukuTerpopuler.map(b => ({
-    judul: b.judul.length > 15 ? b.judul.substring(0, 15) + "..." : b.judul,
-    peminjam: b.peminjam
+  const bukuPolarChartData = bukuTerpopuler.map((buku, index) => ({
+    judul: buku.judul.length > 10 ? buku.judul.substring(0, 10) + "..." : buku.judul,
+    peminjam: buku.peminjam,
+    fill: buku.fill
   }));
 
   const chartConfig = {
@@ -189,7 +189,7 @@ const BerandaPengunjung = () => {
               </CardContent>
             </Card>
 
-            {/* Chart Buku Terpopuler */}
+            {/* Chart Buku Terpopuler - Polar Area Chart */}
             <Card className="border-0 shadow-md">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -199,31 +199,17 @@ const BerandaPengunjung = () => {
               </CardHeader>
               <CardContent>
                 <ChartContainer config={chartConfig} className="h-[300px]">
-                  <BarChart data={bukuChartData}>
-                    <XAxis 
-                      dataKey="judul" 
-                      tickLine={false}
-                      axisLine={false}
-                      className="text-xs"
-                      angle={-45}
-                      textAnchor="end"
-                      height={60}
-                    />
-                    <YAxis 
-                      tickLine={false}
-                      axisLine={false}
-                      className="text-xs"
-                    />
-                    <ChartTooltip 
-                      content={<ChartTooltipContent />}
-                      cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
-                    />
-                    <Bar 
+                  <RadialBarChart data={bukuPolarChartData} innerRadius="30%" outerRadius="90%">
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="judul" />
+                    <PolarRadiusAxis angle={30} domain={[0, 200]} />
+                    <RadialBar 
                       dataKey="peminjam" 
-                      fill="var(--color-peminjam)" 
-                      radius={[4, 4, 0, 0]}
+                      cornerRadius={4} 
+                      fill="#10b981"
                     />
-                  </BarChart>
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                  </RadialBarChart>
                 </ChartContainer>
               </CardContent>
             </Card>

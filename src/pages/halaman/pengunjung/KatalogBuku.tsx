@@ -13,50 +13,56 @@ const KatalogBuku = () => {
     {
       id: 1,
       judul: "Laskar Pelangi",
+      penulis: "Andrea Hirata",
       sinopsis: "Kisah inspiratif tentang sepuluh anak dari keluarga miskin yang bersekolah di sebuah sekolah Muhammadiyah di Belitung...",
       jumlahBuku: 5,
       tersedia: 3,
-      cover: ""
+      cover: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400"
     },
     {
       id: 2,
       judul: "Ayat-Ayat Cinta",
+      penulis: "Habiburrahman El Shirazy",
       sinopsis: "Novel romantis yang menceritakan kisah cinta seorang mahasiswa Indonesia di Mesir...",
       jumlahBuku: 8,
       tersedia: 6,
-      cover: ""
+      cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400"
     },
     {
       id: 3,
       judul: "Negeri 5 Menara",
+      penulis: "Ahmad Fuadi",
       sinopsis: "Petualangan enam sahabat di pesantren yang bermimpi menggapai bintang...",
       jumlahBuku: 4,
       tersedia: 2,
-      cover: ""
+      cover: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
     },
     {
       id: 4,
       judul: "Sang Pemimpi",
+      penulis: "Andrea Hirata",
       sinopsis: "Kelanjutan dari Laskar Pelangi yang menceritakan perjuangan Ikal dan Arai...",
       jumlahBuku: 6,
       tersedia: 4,
-      cover: ""
+      cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400"
     },
     {
       id: 5,
       judul: "Perahu Kertas",
+      penulis: "Dee Lestari",
       sinopsis: "Kisah cinta Kugy dan Keenan yang diwarnai dengan impian dan rintangan...",
       jumlahBuku: 7,
       tersedia: 5,
-      cover: ""
+      cover: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=400"
     },
     {
       id: 6,
       judul: "Rectoverso",
+      penulis: "Dee Lestari",
       sinopsis: "Kumpulan cerita pendek tentang cinta dalam berbagai perspektif...",
       jumlahBuku: 3,
       tersedia: 1,
-      cover: ""
+      cover: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400"
     }
   ];
 
@@ -102,25 +108,34 @@ const KatalogBuku = () => {
           {/* Katalog Buku Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {daftarBuku.map((buku) => (
-              <Card key={buku.id} className="hover:shadow-lg transition-all duration-200 border-0 shadow-md">
+              <Card key={buku.id} className="hover:shadow-lg transition-all duration-200 border-0 shadow-md overflow-hidden">
+                <div className="aspect-[3/4] w-full relative">
+                  <img 
+                    src={buku.cover} 
+                    alt={buku.judul}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback ke icon jika gambar gagal dimuat
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                  <div className="hidden w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                    <Book className="h-16 w-16 text-white" />
+                  </div>
+                </div>
                 <CardHeader className="pb-3">
-                  <div className="flex items-start gap-4">
-                    <div className="w-16 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Book className="h-8 w-8 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-2">
-                        {buku.judul}
-                      </CardTitle>
-                      <div className="flex gap-2 mt-2">
-                        <Badge variant={buku.tersedia > 0 ? "default" : "destructive"}>
-                          {buku.tersedia > 0 ? "Tersedia" : "Tidak Tersedia"}
-                        </Badge>
-                        <Badge variant="outline">
-                          {buku.tersedia}/{buku.jumlahBuku}
-                        </Badge>
-                      </div>
-                    </div>
+                  <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-2">
+                    {buku.judul}
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 font-medium">{buku.penulis}</p>
+                  <div className="flex gap-2 mt-2">
+                    <Badge variant={buku.tersedia > 0 ? "default" : "destructive"}>
+                      {buku.tersedia > 0 ? "Tersedia" : "Tidak Tersedia"}
+                    </Badge>
+                    <Badge variant="outline">
+                      {buku.tersedia}/{buku.jumlahBuku}
+                    </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
