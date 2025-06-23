@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { 
   Users, 
   Book, 
@@ -15,7 +17,8 @@ import {
   Plus,
   Search,
   Filter,
-  Trophy
+  Trophy,
+  TrendingUp
 } from "lucide-react";
 
 const BerandaAdmin = () => {
@@ -43,6 +46,28 @@ const BerandaAdmin = () => {
     { rank: 4, judul: "Sang Pemimpi", peminjam: 115, cover: "" },
     { rank: 5, judul: "Perahu Kertas", peminjam: 98, cover: "" },
   ];
+
+  // Data untuk chart
+  const pembacaChartData = pembacaTeraktif.map(p => ({
+    nama: p.nama.split(" ")[0], // Hanya nama depan untuk chart
+    buku: p.buku
+  }));
+
+  const bukuChartData = bukuTerpopuler.map(b => ({
+    judul: b.judul.length > 15 ? b.judul.substring(0, 15) + "..." : b.judul,
+    peminjam: b.peminjam
+  }));
+
+  const chartConfig = {
+    buku: {
+      label: "Jumlah Buku",
+      color: "#3b82f6",
+    },
+    peminjam: {
+      label: "Jumlah Peminjam",
+      color: "#10b981",
+    },
+  };
 
   const getColorClasses = (color: string) => {
     const colors = {
@@ -126,6 +151,84 @@ const BerandaAdmin = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Chart Statistik */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Chart Pembaca Teraktif */}
+            <Card className="border-0 shadow-md">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-blue-600" />
+                  Statistik Pembaca Teraktif
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="h-[300px]">
+                  <BarChart data={pembacaChartData}>
+                    <XAxis 
+                      dataKey="nama" 
+                      tickLine={false}
+                      axisLine={false}
+                      className="text-xs"
+                    />
+                    <YAxis 
+                      tickLine={false}
+                      axisLine={false}
+                      className="text-xs"
+                    />
+                    <ChartTooltip 
+                      content={<ChartTooltipContent />}
+                      cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                    />
+                    <Bar 
+                      dataKey="buku" 
+                      fill="var(--color-buku)" 
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+
+            {/* Chart Buku Terpopuler */}
+            <Card className="border-0 shadow-md">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                  Statistik Buku Terpopuler
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="h-[300px]">
+                  <BarChart data={bukuChartData}>
+                    <XAxis 
+                      dataKey="judul" 
+                      tickLine={false}
+                      axisLine={false}
+                      className="text-xs"
+                      angle={-45}
+                      textAnchor="end"
+                      height={60}
+                    />
+                    <YAxis 
+                      tickLine={false}
+                      axisLine={false}
+                      className="text-xs"
+                    />
+                    <ChartTooltip 
+                      content={<ChartTooltipContent />}
+                      cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
+                    />
+                    <Bar 
+                      dataKey="peminjam" 
+                      fill="var(--color-peminjam)" 
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Peringkat Pembaca Teraktif */}
